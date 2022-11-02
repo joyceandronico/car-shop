@@ -1,22 +1,32 @@
-// template para criação dos testes de cobertura da camada de service
+import * as sinon from 'sinon';
+import chai from 'chai';
+const { expect } = chai;
+import { CarMockTest, CarMockTestWhithId, CarMockTestWithIdMany } from '../../mocks/carMock';
+import CarService from '../../../services/car.service';
+import CarModel from '../../../models/car.model';
+import { ZodError } from 'zod';
+import { ErrorTypes } from '../../../errors/catalog';
 
+describe('Service - Car', () => {
+    const carModel = new CarModel();
+	const carService = new CarService(carModel);
 
-// import * as sinon from 'sinon';
-// import chai from 'chai';
-// const { expect } = chai;
+  before(async () => {
+    sinon
+      .stub(carModel, 'create').resolves(CarMockTest);
+  });
 
-// describe('Sua descrição', () => {
+  after(()=>{
+    sinon.restore();
+  })
 
-//   before(async () => {
-//     sinon
-//       .stub()
-//       .resolves();
-//   });
+  describe('create', () => {
+    it('carro cadastrado com sucesso', async () => {
+        const carCreated = await carService.create(CarMockTest);
 
-//   after(()=>{
-//     sinon.restore();
-//   })
+        expect(carCreated).to.be.deep.equal(CarMockTest);
+    });
 
-//   it('', async () => {});
+  });
 
-// });
+});
