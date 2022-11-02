@@ -1,22 +1,27 @@
-// template para criação dos testes de cobertura da camada de model
+import * as sinon from 'sinon';
+import chai from 'chai';
+const { expect } = chai;
+import { CarMockTest, CarMockTestWhithId, CarMockTestWithIdMany } from '../../mocks/carMock';
+import { Model } from 'mongoose';
+import CarModel from '../../../models/car.model';
 
 
-// import * as sinon from 'sinon';
-// import chai from 'chai';
-// const { expect } = chai;
+describe('carModel', () => {
+    const carModel = new CarModel();
 
-// describe('Sua descrição', () => {
+  before(async () => {
+    sinon.stub(Model, 'create').resolves(CarMockTestWhithId);
+  });
 
-//   before(async () => {
-//     sinon
-//       .stub()
-//       .resolves();
-//   });
+  after(()=>{
+    sinon.restore();
+  })
 
-//   after(()=>{
-//     sinon.restore();
-//   })
+  describe('create', () => {
+    it('Carro cadastrado com sucesso', async () => {
+      const newCar = await carModel.create(CarMockTest);
+      expect(newCar).to.be.deep.equal(CarMockTestWhithId)
+    });
+  });
 
-//   it('', async () => {});
-
-// });
+});
